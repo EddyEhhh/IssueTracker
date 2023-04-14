@@ -1,0 +1,5 @@
+ INFO: Repository started (repository=issue-tracker/issue-tracker)
+       "renovateVersion": "28.25.2"
+ INFO: Repository is disabled - skipping (repository=issue-tracker/issue-tracker)
+ INFO: Repository finished (repository=issue-tracker/issue-tracker)
+       "durationMs": 4176

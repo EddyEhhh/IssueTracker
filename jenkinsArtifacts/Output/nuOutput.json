@@ -1,0 +1,33 @@
+{
+  "messages": [
+    {
+      "type": "error",
+      "url": "file:/var/lib/jenkins/workspace/issue-tracker-pipeline/issue-tracker-web/src/main/resources/css/layout.css",
+      "lastLine": 613,
+      "lastColumn": 20,
+      "firstColumn": 18,
+      "message": "CSS: “align-items”: “top” is not a “align-items” value.",
+      "extract": "splay: flex;\n    align-items: top;\n    ",
+      "hiliteStart": 30,
+      "hiliteLength": 3
+    },
+    {
+      "type": "error",
+      "url": "file:/var/lib/jenkins/workspace/issue-tracker-pipeline/issue-tracker-web/src/main/resources/css/primeflex.min.css",
+      "lastLine": 12493,
+      "lastColumn": 8,
+      "message": "CSS: “max-height”: “auto” is not a “max-height” value."
+    },
+    {
+      "type": "error",
+      "url": "file:/var/lib/jenkins/workspace/issue-tracker-pipeline/resources/css/primeflex.min.css",
+      "lastLine": 2,
+      "lastColumn": 222668,
+      "firstColumn": 222665,
+      "message": "CSS: “max-height”: “auto” is not a “max-height” value.",
+      "extract": "{max-height:0}100%{max-height:auto}}@key",
+      "hiliteStart": 30,
+      "hiliteLength": 4
+    }
+  ]
+}
