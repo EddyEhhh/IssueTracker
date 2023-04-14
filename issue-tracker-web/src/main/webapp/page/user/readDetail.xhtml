@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en">
+
+    <ui:composition template="/template/user_default.xhtml">
+        <ui:define name="pageTitle">#{msg['header.issueList']}</ui:define>
+        <ui:define name="body">
+            <h:body>
+                <div class="relative absolute px-4 pt-1 pb-6 w-8">
+                    <h:form id="form">
+                        <div class="card p-4">
+                            <h3>#{msg["issue.generalInformation"]}</h3>
+                            <div class="grid">
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="font-bold text-xl" value="#{msg['issue.title']}"></p:outputLabel><br/>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.title}"/>     
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.priority']}" ></p:outputLabel>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueDetailDTO.priority}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="font-bold text-xl" value="#{msg['issue.issueDescription']}" ></p:outputLabel><br/>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.description}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.comments']}"></p:outputLabel>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueDetailDTO.comment}"/>
+                                </div>
+                            </div>
+                            <p:outputPanel id="tagOutputPanel">
+                                <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.issueTags']}"></p:outputLabel>
+                                <div class="card read-card mt-2 h-7rem">
+                                    <h:panelGroup id="display" class="flex flex-wrap">
+                                        <p:repeat value="#{issueDetailBean.selectedIssue.issueDetailDTO.issueTagListDTO}" var="tag">
+                                            <p:chip label="#{tag.title}" styleClass="mr-1 text-white tag-read-outline #{tag.hexColor}"></p:chip>
+                                        </p:repeat>
+                                    </h:panelGroup>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+
+                        <p:divider/>
+
+                        <div class="card p-4">
+                            <h3>#{msg["issue.deviceInformation"]}</h3>
+                            <div class="grid">
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="font-bold text-xl" value="#{msg['issue.hostName']}"></p:outputLabel><br/>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.hostName}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="font-bold text-xl" value="#{msg['issue.chargerSerialNumber']}"></p:outputLabel><br/>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.chargerSerialNumber}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="font-bold text-xl" value="#{msg['issue.deviceModel']}"></p:outputLabel><br/>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.deviceModel}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="font-bold text-xl" value="#{msg['issue.deviceSerialNumber']}"></p:outputLabel><br/>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.deviceSerialNumber}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.operatingSystem']}"></p:outputLabel>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.operatingSystem}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.antivirus']}"></p:outputLabel>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.antivirus}"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p:divider/>
+
+                        <div class="card p-4">
+                            <h3>#{msg["issue.customerDetails"]}</h3>
+                            <div class="grid">
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.customerName']}"></p:outputLabel>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.name}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.customerEmail']}"></p:outputLabel>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.email}"/> 
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.customerContactNumber']}"></p:outputLabel>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.contactNumber}"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next" class="flex font-bold text-xl" value="#{msg['issue.customerDevicePassword']}"></p:outputLabel>
+                                    <p:outputLabel class="w-full my-2" value="#{issueDetailBean.selectedIssue.issueCustomerDetailDTO.devicePassword}"/>
+                                </div>
+                            </div>
+                        </div>
+
+<!--                    <h3>#{msg["issue.teamOperatingOnThisIssue"]}</h3>
+                        <div class="grid">
+                            <div class="col-6">
+                                <p:outputLabel class="flex" for="@next">#{msg["issue.teamLeader"]}</p:outputLabel>
+                                <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true">
+                                    <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                    <f:selectItems value="#{issueDetailBean.selectedIssue.issueTeamDTO.team}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="col-6">
+                                <p:outputLabel class="flex" for="@next">#{msg["issue.assistants"]}</p:outputLabel>
+                                <p:selectCheckboxMenu class="flex my-2" filterMatchMode="startsWith" filter="true" label="#{null}" multiple="true">
+                                    <f:selectItems value="#{issueDetailBean.selectedIssue.issueTeamDTO.team}"/>
+                                </p:selectCheckboxMenu>
+                            </div>
+                        </div> -->
+                    </h:form>
+                </div>
+            </h:body>
+        </ui:define>
+    </ui:composition>
+</html>

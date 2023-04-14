@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en">
+
+    <ui:composition>
+        <h:form>
+        <div class="layout-topbar">
+            <p:graphicImage class="logo-header" name="#{themeBean.selectedLogo}" library="img"/>
+            <div class="logout">
+                <p:selectOneButton class="px-2" value="#{themeBean.selectedTheme}" valueChangeListener="#{themeBean.changeTheme}">                                    
+                    <f:selectItem itemLabel="Dark" itemValue="arya"/>
+                    <f:selectItem itemLabel="Light" itemValue="saga"/>
+                    <p:ajax immediate="true" process="@this"/>
+                </p:selectOneButton>
+                <p:commandButton value="Logout" action="#{staffBean.logout}"/>
+            </div>
+        </div>
+        </h:form>
+    </ui:composition>
+
+</html>

@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en">
+
+    <ui:composition template="/template/guest_default.xhtml">
+        <ui:define name="pageTitle">#{msg['header.login']}</ui:define>
+        <ui:define name="body">
+            <h:body>
+                <ui:insert name="authComponent">
+                    <ui:include src="template/overlay/auth.xhtml"/>
+                </ui:insert>
+                <div class="login-container md:w-8 block mx-auto">
+                    <div class="login-left-container">
+                        <h1>Welcome Back!</h1>
+                        <p>To keep connected with us please login with your information</p>
+                    </div>
+                    <div class="login-right-container">
+                        <h:form class="w-8">
+                            <h1 class="mb-5 font-bold">#{msg["user.login"]}</h1>
+                            <div class="field">
+                                <p:outputLabel for="email">#{msg["user.email"]}</p:outputLabel>
+                                <p:inputText id="email" type="text" class="inputfield w-full my-2" value="#{loginBean.staffLoginDTO.email}"/>
+                                <p:message class="messages" for="email"/>
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="password">#{msg["user.password"]}</p:outputLabel>
+                                <p:password id="password" class="inputfield w-full my-2" value="#{loginBean.staffLoginDTO.password}"/>
+                                <p:message class="messages" for="password"/>
+                            </div>
+                            <p:commandButton class="w-full mt-3" id="login" update="@form" value="#{msg['user.login']}" action="#{loginBean.login}"/>
+                            <p:growl id="message" showDetail="true" globalOnly="true"/>
+                        </h:form>
+                    </div>   
+                </div>
+
+
+                <!--<h:panelGroup>
+                    <h:form class="static" style="height:500px; botton: 100" >
+                        <p:commandButton value="test" icon="pi pi-external-link" action="#{loginBean.test}">
+
+                        </p:commandButton>
+                        <p:commandButton value="testFront" type="button" icon="pi pi-external-link" action="#{loginBean.elTest}" />
+                        <p:commandButton id="testloginBean" value="authBeanViewTest" action="#{authBean.viewTest}"/>
+                        <p:commandButton action="#{loginBean.renderTest}" update="testing"/>
+
+                    </h:form>
+                    <h:form id="testing" class="relative">
+                        <p:commandButton value="show button" action="#{loginBean.renderTest}" update="testing">
+                           <f:ajax execute="@form" render="testing"/>
+                        </p:commandButton>
+                        <p:commandButton value="this was not hidden" rendered="true" action="#{loginBean.test}"/>
+                        <p:commandButton value="this was hidden" rendered="#{loginBean.testRendered}" actionListener="#{loginBean.test}">
+                        </p:commandButton>
+                    </h:form>
+                </h:panelGroup>-->
+            </h:body>
+        </ui:define>
+    </ui:composition>
+
+</html>

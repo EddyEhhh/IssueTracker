@@ -1,0 +1,437 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en">
+
+    <ui:composition template="/template/user_default.xhtml">
+        <ui:define name="pageTitle">#{msg['header.issueList']}</ui:define>
+        <ui:define name="body">
+            <h:body>
+                <h:form id="form">
+                    <p:growl id="messages" showDetail="true" globalOnly="true"/>
+                    <div class="relative flex flex-row ml-3 mr-3 pt-2">
+                        <div class="flex flex-column">
+                            <p:outputLabel class="flex" for="search">#{msg["issueList.search"]}</p:outputLabel>
+                            <span class="mt-2">
+                                <p:inputText id="search" type="text" class="flex inputfield" placeholder="Search"/>
+                            </span>
+                        </div>
+                        <div class="flex flex-column ml-4">
+                            <p:outputLabel class="flex" for="sort">#{msg["issueList.sort"]}</p:outputLabel>
+                            <p:selectOneMenu id="sort" class="flex inputfield mt-2" alwaysDisplayLabel="true">
+                                <f:selectItem itemLabel="item 1" itemValue="item 1"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <p:dialog header="Issue Details" closeOnEscape="true" showEffect="fade" modal="true" widgetVar="manageIssueDialog" responsive="true" resizable="false" draggable="false" width="1000" height="500">
+                        <p:outputPanel id="manage-issue-content" class="relative">
+                            <p:outputPanel class="mb-5" rendered="#{not empty issueUpdateBean.selectedIssue}">
+
+                                <p:outputPanel id="generalInformation">
+                                    <h5>#{msg["issue.generalInformation"]}</h5>
+                                    <div class="grid">
+                                        <div class="col-12">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.title"]}</p:outputLabel>
+                                            <div class="overflow-auto ui-inputfield my-2">#{issueUpdateBean.selectedIssue.title}</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.issueDescription"]}</p:outputLabel>
+                                            <div class="overflow-auto ui-inputfield my-2">#{issueUpdateBean.selectedIssue.description}</div>
+                                        </div>
+                                        <div class="col-12">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.status"]}</p:outputLabel>
+                                            <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true" value="#{issueUpdateBean.selectedIssue.issueDetailDTO.status}">
+                                                <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                                <f:selectItems value="#{issueCreateBean.status}"/>
+                                            </p:selectOneMenu>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.progressLevel"]}</p:outputLabel>
+                                            <p:spinner class="w-full my-2" stepFactor="10" min="0" max="100" value="#{issueUpdateBean.selectedIssue.issueDetailDTO.progressLevel}"/>                                        
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.progressStage"]}</p:outputLabel>
+                                            <p:selectOneMenu class="flex inputfield mt-2" alwaysDisplayLabel="true" value="#{issueUpdateBean.selectedIssue.issueDetailDTO.progressStage}">
+                                                <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                                <f:selectItems value="#{issueCreateBean.progressStage}"/>
+                                            </p:selectOneMenu>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.priority"]}</p:outputLabel>
+                                            <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true" value="#{issueUpdateBean.selectedIssue.issueDetailDTO.priority}">
+                                                <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                                <f:selectItems value="#{issueCreateBean.priority}"/>
+                                            </p:selectOneMenu>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next" value="To Be Completed By"/>
+                                            <p:datePicker class="flex my-2" inputStyleClass="w-full" id="time" showTime="true" mindate="#{issueCreateBean.minDateTime}" pattern="dd/MM/yyyy" value="#{issueUpdateBean.selectedIssue.issueDetailDTO.endDate}"/>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-12">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.comments"]}</p:outputLabel>
+                                            <p:inputTextarea class="w-full my-2" value="#{issueUpdateBean.selectedIssue.issueDetailDTO.comment}"></p:inputTextarea>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+
+                                <p:outputPanel id="tagOutputPanel">
+                                    <h4 class="issue-firstHeader">#{msg["issue.issueTags"]}</h4>
+                                    <div class="grid">
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.TagTitle"]}</p:outputLabel>
+                                            <p:selectOneMenu id="tagTitle" class="w-full my-2" value="#{newTagDisplayBean.tagTitle}" editable="true" alwaysDisplayLabel="true">
+                                                <p:ajax listener="#{newTagDisplayBean.handleChange}" update="tagColor"/>
+                                                <f:selectItem itemLabel="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems value="#{newTagDisplayBean.tagTitleList}"/>
+                                            </p:selectOneMenu>
+                                            <p:message class="messages" for="tagTitle"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.TagColor"]}</p:outputLabel>
+                                            <div class="flex flex-row">
+                                                <p:selectOneMenu id="tagColor" class="flex w-full inputfield my-2" value="#{newTagDisplayBean.tagColor}" alwaysDisplayLabel="true">
+                                                    <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                                    <f:selectItems value="#{newTagDisplayBean.tagColorList}"/>
+                                                </p:selectOneMenu>
+                                                <p:commandButton class="ml-2 mt-2 h-full" process="tagOutputPanel" update="tagOutputPanel" action="#{newTagDisplayBean.updateTag}" icon="pi pi-plus"></p:commandButton>
+                                            </div>
+                                            <p:message class="messages" for="tagColor"/>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="card h-7rem">
+                                                <h:panelGroup id="display" class="flex flex-wrap">
+                                                    <p:repeat id="displayRepeat" value="#{newTagDisplayBean.tagList}" var="tag">
+                                                        <div class="issue-tag mr-2 text-white font-bold #{tag.hexColor}">
+                                                            <span>#{tag.title}</span>
+                                                            <p:commandButton styleClass="tag-btn text-white rounded-button ui-button-flat ui-button-plain" icon="pi pi-times" process="@this" action="#{newTagDisplayBean.removeTag}">
+                                                                <f:setPropertyActionListener target="#{newTagDisplayBean.tag}" value="#{tag}"/>
+                                                            </p:commandButton>
+                                                        </div>
+                                                    </p:repeat>
+                                                </h:panelGroup>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+
+                                <p:outputPanel id="deviceInformation">
+                                    <h5>#{msg["issue.deviceInformation"]}</h5>
+                                    <div class="grid">
+                                        <div class="col-6">
+                                            <p:outputLabel for="@next">#{msg["issue.hostName"]}</p:outputLabel>
+                                            <p:inputText class="w-full my-2" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.hostName}"/>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel for="@next">#{msg["issue.chargerSerialNumber"]}</p:outputLabel>
+                                            <p:inputText class="w-full my-2" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.chargerSerialNumber}"/>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel for="@next">#{msg["issue.deviceModel"]}</p:outputLabel>
+                                            <p:inputText class="w-full my-2" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.deviceModel}"/>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel for="@next">#{msg["issue.deviceSerialNumber"]}</p:outputLabel>
+                                            <p:inputText class="w-full my-2" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.deviceSerialNumber}"/>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.operatingSystem"]}</p:outputLabel>
+                                            <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.operatingSystem}">
+                                                <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                                <f:selectItems value="#{issueCreateBean.operatingSystem}"/>
+                                            </p:selectOneMenu>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.antivirus"]}</p:outputLabel>
+                                            <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.antivirus}">
+                                                <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                                <f:selectItems value="#{issueCreateBean.antivirus}"/>
+                                            </p:selectOneMenu>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+
+                                <p:outputPanel id="others">
+                                    <h5>#{msg["issue.customerDetails"]}</h5>
+                                    <div class="grid">
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.customerName"]}</p:outputLabel>
+                                            <p:inputText class="w-full my-2" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.name}"/>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.customerEmail"]}</p:outputLabel>
+                                            <p:inputText class="w-full my-2" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.email}"/> 
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.customerContactNumber"]}</p:outputLabel>
+                                            <p:inputText class="w-full my-2" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.contactNumber}"/>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.customerDevicePassword"]}</p:outputLabel>
+                                            <p:password class="my-2" toggleMask="true" redisplay="true" size="45" value="#{issueUpdateBean.selectedIssue.issueCustomerDetailDTO.devicePassword}"/>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                    </div>
+
+                                    <h5>#{msg["issue.teamOperatingOnThisIssue"]}</h5>
+                                    <div class="grid">
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.teamLeader"]}</p:outputLabel>
+                                            <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true">
+                                                <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                                <f:selectItems value="#{issueCreateBean.team}"/>
+                                            </p:selectOneMenu>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <p:outputLabel class="flex" for="@next">#{msg["issue.assistants"]}</p:outputLabel>
+                                            <p:selectCheckboxMenu class="flex my-2" filterMatchMode="startsWith" filter="true" label="#{null}" multiple="true">
+                                                <f:selectItems value="#{issueCreateBean.team}"/>
+                                            </p:selectCheckboxMenu>
+                                            <p:message class="messages" for="@previous"/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+
+                                <div class="absolute right-0">
+                                    <p:commandButton class="ui-button-warning shadow-2" value="Archive" icon="pi pi-folder" update="messages issueList" oncomplete="manageIssueDialog.hide()" process="@this" actionListener="#{issueUpdateBean.archiveIssue}"/>
+                                    <p:commandButton class="ml-2 shadow-2" value="Save" icon="pi pi-check" update="manage-issue-content" process="generalInformation deviceInformation others @this" actionListener="#{issueUpdateBean.updateIssue}"/>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:dialog>
+
+                    <p:outputPanel id="issueList">
+                        <div class="grid mt-2">
+                            <div class="col ml-3">
+                                <div class="issue-header open-issues p-2 font-bold">#{msg["issueList.open"]}</div>
+                                <div class="issue-content card scroll overflow-auto" >
+                                    <p:repeat var="openIssue" value="#{issueDisplayBean.openIssues}">
+                                        <div class="card flex flex-column p-2 mb-2">
+                                            <div class="relative flex flex-row h-5rem">
+                                                <div class="flex flex-column w-11">
+                                                    <div class="issue-title">
+                                                        <p class= "text-lg font-semibold"><h:outputText value="#{openIssue.title}"/></p>
+                                                    </div>
+                                                    <div class="issue-id">
+                                                        <p class="text-base text-xs text-400"><h:outputText value="#{openIssue.uuid}"/></p>
+                                                    </div>
+                                                </div>
+                                                <div class="absolute right-0">
+                                                    <p:linkButton styleClass="ui-button-flat ui-button-plain" icon="pi pi-search" outcome="readDetail.xhtml">
+                                                        <f:param name="id" value="#{openIssue.uuid}"/>
+                                                    </p:linkButton>
+                                                    <p:commandButton styleClass="ui-button-flat ui-button-plain" icon="pi pi-pencil" action="#{issueUpdateBean.init(openIssue)}" update=":form:manage-issue-content" process="@this" oncomplete="PF('manageIssueDialog').show()"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="relative flex flex-row my-2">
+                                                <div class="issue-priority">
+                                                    <i class="#{openIssue.issueDetailDTO.priorityIcon}"></i>
+                                                </div>
+                                                <div class="issue-due absolute right-0">
+                                                    <p class="text-base">#{openIssue.issueDetailDTO.timeLeft}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="divider"/>
+
+                                            <div class="relative flex flex-row">
+                                                <div class="flex flex-column w-7">
+                                                    <div class="issue-tags">
+                                                        <p:repeat value="#{openIssue.issueDetailDTO.issueTagListDTO}" var="tag">
+                                                            <p:chip label="#{tag.title}" styleClass="mr-1 text-white tag-outline #{tag.hexColor}"></p:chip>
+                                                        </p:repeat>
+                                                    </div>
+                                                    <div class="issue-progressLevel mt-2">
+                                                        <p:progressBar class="issue-progressBar" value="#{openIssue.issueDetailDTO.progressLevel}"/>                                    
+                                                    </div>
+                                                    <div class="issue-progressStage">
+                                                        <p><h:outputText value="#{openIssue.issueDetailDTO.progressStage}"/></p>
+                                                    </div>
+                                                </div>
+                                                <div class="absolute right-0 bottom-0 flex flex-column">
+                                                    <div class="flex flex-row ml-auto mr-0 my-1">
+                                                        <div class="issue-leaderProfile">
+                                                            <p:graphicImage class="logo h-2rem w-2rem" name="user.png" library="img"/>
+                                                        </div>
+                                                        <div class="issue-leaderName my-auto mx-1">
+                                                            <p><h:outputText value="p"/></p>
+                                                        </div>
+                                                        <div class="issue-collaboratorCount my-auto">
+                                                            <p>+3</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="issue-lastUpdate ml-auto mr-0">
+                                                        <p><h:outputText value="3 min ago"/></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </p:repeat>
+                                </div>
+                            </div>
+
+                            <div class="col ml-3">
+                                <div class="issue-header inProgress-issues p-2 font-bold ">#{msg["issueList.inProgress"]}</div>
+                                <div class="issue-content card scroll overflow-auto">
+                                    <p:repeat var="inProgressIssue" value="#{issueDisplayBean.inProgressIssues}">
+                                        <div class="card flex flex-column p-2 mb-2">
+                                            <div class="relative flex flex-row h-5rem">
+                                                <div class="flex flex-column w-11">
+                                                    <div class="issue-title">
+                                                        <p class= "text-lg font-semibold"><h:outputText value="#{inProgressIssue.title}"/></p>
+                                                    </div>
+                                                    <div class="issue-id">
+                                                        <p class="text-base text-xs text-400"><h:outputText value="#{inProgressIssue.uuid}"/></p>
+                                                    </div>
+                                                </div>
+                                                <div class="absolute right-0">
+                                                    <p:linkButton styleClass="ui-button-flat ui-button-plain" icon="pi pi-search" outcome="readDetail.xhtml">
+                                                        <f:param name="id" value="#{inProgressIssue.uuid}"/>
+                                                    </p:linkButton>
+                                                    <p:commandButton styleClass="ui-button-flat ui-button-plain" icon="pi pi-pencil" action="#{issueUpdateBean.init(inProgressIssue)}" update=":form:manage-issue-content" process="@this" oncomplete="PF('manageIssueDialog').show()"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="relative flex flex-row my-2">
+                                                <div class="issue-priority">
+                                                    <i class="#{inProgressIssue.issueDetailDTO.priorityIcon}"></i>
+                                                </div>
+                                                <div class="issue-due absolute right-0">
+                                                    <p class="text-base">#{inProgressIssue.issueDetailDTO.timeLeft}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="divider"/>
+
+                                            <div class="relative flex flex-row">
+                                                <div class="flex flex-column w-7">
+                                                    <div class="issue-tags">
+                                                        <p:repeat value="#{inProgressIssue.issueDetailDTO.issueTagListDTO}" var="tag">
+                                                            <p:chip label="#{tag.title}" styleClass="mr-1 text-white tag-outline #{tag.hexColor}"></p:chip>
+                                                        </p:repeat>
+                                                    </div>
+                                                    <div class="issue-progressLevel mt-2">
+                                                        <p:progressBar class="issue-progressBar" value="#{inProgressIssue.issueDetailDTO.progressLevel}"/>                                    
+                                                    </div>
+                                                    <div class="issue-progressStage">
+                                                        <p><h:outputText value="#{inProgressIssue.issueDetailDTO.progressStage}"/></p>
+                                                    </div>
+                                                </div>
+                                                <div class="absolute right-0 bottom-0 flex flex-column">
+                                                    <div class="flex flex-row ml-auto mr-0 my-1">
+                                                        <div class="issue-leaderProfile">
+                                                            <p:graphicImage class="logo h-2rem w-2rem" name="user.png" library="img"/>
+                                                        </div>
+                                                        <div class="issue-leaderName my-auto mx-1">
+                                                            <p><h:outputText value="p"/></p>
+                                                        </div>
+                                                        <div class="issue-collaboratorCount my-auto">
+                                                            <p>+3</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="issue-lastUpdate ml-auto mr-0">
+                                                        <p><h:outputText value="3 min ago"/></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </p:repeat>
+                                </div>
+                            </div>
+
+                            <div class="col ml-3 mr-3">
+                                <div class="issue-header resolved-issues p-2 font-bold">#{msg["issueList.resolved"]}</div>
+                                <div class="issue-content card scroll overflow-auto">
+                                    <p:repeat var="resolvedIssue" value="#{issueDisplayBean.resolvedIssues}">
+                                        <div class="card flex flex-column p-2 mb-2">
+                                            <div class="relative flex flex-row h-5rem">
+                                                <div class="flex flex-column w-11">
+                                                    <div class="issue-title">
+                                                        <p class= "text-lg font-semibold"><h:outputText value="#{resolvedIssue.title}"/></p>
+                                                    </div>
+                                                    <div class="issue-id">
+                                                        <p class="text-base text-xs text-400"><h:outputText value="#{resolvedIssue.uuid}"/></p>
+                                                    </div>
+                                                </div>
+                                                <div class="absolute right-0">
+                                                    <p:linkButton styleClass="ui-button-flat ui-button-plain" icon="pi pi-search" outcome="readDetail.xhtml">
+                                                        <f:param name="id" value="#{resolvedIssue.uuid}"/>
+                                                    </p:linkButton>
+                                                    <p:commandButton styleClass="ui-button-flat ui-button-plain" icon="pi pi-pencil" action="#{issueUpdateBean.init(resolvedIssue)}" update=":form:manage-issue-content" process="@this" oncomplete="PF('manageIssueDialog').show()"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="relative flex flex-row my-2">
+                                                <div class="issue-priority">
+                                                    <i class="#{resolvedIssue.issueDetailDTO.priorityIcon}"></i>
+                                                </div>
+                                                <div class="issue-due absolute right-0">
+                                                    <p class="text-base">#{resolvedIssue.issueDetailDTO.timeLeft}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="divider"/>
+
+                                            <div class="relative flex flex-row">
+                                                <div class="flex flex-column w-7">
+                                                    <div class="issue-tags">
+                                                        <p:repeat value="#{resolvedIssue.issueDetailDTO.issueTagListDTO}" var="tag">
+                                                            <p:chip label="#{tag.title}" styleClass="mr-1 text-white tag-outline #{tag.hexColor}"></p:chip>
+                                                        </p:repeat>
+                                                    </div>
+                                                    <div class="issue-progressLevel mt-2">
+                                                        <p:progressBar class="issue-progressBar" value="#{resolvedIssue.issueDetailDTO.progressLevel}"/>                                    
+                                                    </div>
+                                                    <div class="issue-progressStage">
+                                                        <p><h:outputText value="#{resolvedIssue.issueDetailDTO.progressStage}"/></p>
+                                                    </div>
+                                                </div>
+                                                <div class="absolute right-0 bottom-0 flex flex-column">
+                                                    <div class="flex flex-row ml-auto mr-0 my-1">
+                                                        <div class="issue-leaderProfile">
+                                                            <p:graphicImage class="logo h-2rem w-2rem" name="user.png" library="img"/>
+                                                        </div>
+                                                        <div class="issue-leaderName my-auto mx-1">
+                                                            <p><h:outputText value="p"/></p>
+                                                        </div>
+                                                        <div class="issue-collaboratorCount my-auto">
+                                                            <p>+3</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="issue-lastUpdate ml-auto mr-0">
+                                                        <p><h:outputText value="3 min ago"/></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </p:repeat>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </h:form>
+            </h:body>
+        </ui:define>
+    </ui:composition>
+</html>

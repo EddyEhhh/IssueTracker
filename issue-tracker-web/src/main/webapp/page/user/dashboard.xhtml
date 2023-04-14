@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en">
+
+    <ui:composition template="/template/user_default.xhtml">
+        <ui:define name="pageTitle">#{msg['header.dashboard']}</ui:define>
+        <ui:define name="body">
+            <h:body>
+                <h:form>
+                    <div class="grid">
+                        <p:card class="col m-4">
+                            <f:facet name="title">Open</f:facet>
+                            <p class="issue-count">#{dashboardBean.numberOfOpen}</p>
+                        </p:card>
+                        <p:card class="col m-4">
+                            <f:facet name="title">In Progress</f:facet>
+                            <p class="issue-count">#{dashboardBean.numberOfInProgress}</p>
+                        </p:card>
+                        <p:card class="col m-4">
+                            <f:facet name="title">Resolved</f:facet>
+                            <p class="issue-count">#{dashboardBean.numberOfResolved}</p>
+                        </p:card>
+                    </div>          
+                    <div class="card mx-3">
+                        <p:dataTable id="latestChange" scrollable="true" scrollHeight="300" widgetVar="dtLatestChange"
+                                     emptyMessage="No Data Found with the Given Criteria"
+                                     rows="5"
+                                     paginator="false"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     resizableColumns="true"
+                                     draggableColumns="true">                            
+                            <f:facet name="header">
+                                <div class="grid my-auto">
+                                    <div class="col-9 font-bold text-3xl my-auto">Latest Changes</div>
+                                    <div class="col-1">
+                                        <p:commandButton id="toggler" type="button" value="Filter" class="mx-4 ui-button-raised" icon="pi pi-align-justify"/>
+                                        <p:columnToggler datasource="latestChange" trigger="toggler" class="w-full"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="p-d-flex p-jc-end">
+                                            <p:inputText id="globalFilter" class="shadow-2 w-full" onkeyup="PF('dtLatestChange').filter()" placeholder="Search"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </f:facet>
+
+                            <p:column headerText="ID">
+                                <h:outputText value="1"/>
+                            </p:column>
+
+                            <p:column headerText="Title">
+                                <h:outputText value="1"/>
+                            </p:column>
+
+                            <p:column headerText="Status">
+                                <h:outputText value="1"/>
+                            </p:column>
+
+                            <p:column headerText="Priority">
+                                <h:outputText value="1"/>
+                            </p:column>
+
+                            <p:column headerText="Change Log">
+                                <h:outputText value="1"/>
+                            </p:column>
+
+                            <p:column headerText="Done By">
+                                <h:outputText value="1"/>
+                            </p:column>
+
+                            <p:column headerText="Last Updated">
+                                <h:outputText value="1"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </h:form>
+            </h:body>
+        </ui:define>
+    </ui:composition>
+
+</html>

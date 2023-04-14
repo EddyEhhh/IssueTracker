@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en">
+
+    <ui:composition template="/template/user_default.xhtml">
+        <ui:define name="pageTitle">#{msg['header.closedIssues']}</ui:define>
+        <ui:define name="body">
+            <h:body>
+                <h:form>
+                    <div class="card m-3">
+                        <p:dataTable id="closedIssue" widgetVar="dtClosedIssue" var="issue" value="#{closedIssueBean.archivedIssue}"
+                                     emptyMessage="No Data Found with the Given Criteria"
+                                     rows="5"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     resizableColumns="true"
+                                     draggableColumns="true"
+                                     filteredValue="#{closedIssueBean.filteredArchivedIssue}"
+                                     globalFilterFunction="#{closedIssueBean.globalFilterFunction}">
+                            <f:facet name="header">
+                                <div class="grid my-auto">
+                                    <div class="col-9 font-bold text-3xl my-auto">Closed Issues</div>
+                                    <div class="col-1">
+                                        <p:commandButton id="toggler" type="button" value="Filter" class="mx-4 ui-button-raised" icon="pi pi-align-justify"/>
+                                        <p:columnToggler datasource="closedIssue" trigger="toggler" class="w-full"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="p-d-flex p-jc-end">
+                                            <p:inputText id="globalFilter" class="shadow-2 w-full" onkeyup="PF('dtClosedIssue').filter()" placeholder="Search"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </f:facet>
+                            <p:column headerText="ID" sortBy="#{issue.uuid}">
+                                <h:outputText value="#{issue.uuid}"/>
+                            </p:column>
+
+                            <p:column headerText="Title" sortBy="#{issue.title}">
+                                <h:outputText value="#{issue.title}"/>
+                            </p:column>
+
+                            <p:column headerText="Tags">
+                                    <p:repeat value="#{issue.issueDetailDTO.issueTagListDTO}" var="tag">
+                                        <p:chip label="#{tag.title}" styleClass="mr-1 text-white tag-outline #{tag.hexColor}"></p:chip>
+                                    </p:repeat>
+                            </p:column>
+
+                            <p:column headerText="Issue Description" sortBy="#{issue.description}">
+                                <h:outputText value="#{issue.description}"/>
+                            </p:column>
+
+<!--                            <p:column headerText="Members">
+                                <h:outputText/>
+                            </p:column>-->
+
+                            <p:column headerText="Open Date" >
+                                <h:outputText value="#{issue.createTimestamp}"/>
+                            </p:column>
+
+                            <p:column headerText="Open By">
+                                <h:outputText value="#{issue.createdBy.email}"/>
+                            </p:column>
+
+                            
+
+                        </p:dataTable>
+                    </div>
+                </h:form>
+<!--                <h:form>
+                    <p:commandButton action="#{testingFunction.test}"/>
+                </h:form>-->
+            </h:body>
+        </ui:define>
+    </ui:composition>
+</html>

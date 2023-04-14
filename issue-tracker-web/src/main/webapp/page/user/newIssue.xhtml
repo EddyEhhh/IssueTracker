@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="en">
+
+    <ui:composition template="/template/user_default.xhtml">
+        <ui:define name="pageTitle">#{msg['header.newIssue']}</ui:define>
+        <ui:define name="body">
+            <h:body>
+                <div class="relative absolute px-4 pt-1 pb-6 w-8">
+                    <h:form id="form">
+                        <p:outputPanel id="generalInformation">
+                            <h4>#{msg["issue.generalInformation"]}</h4>
+                            <div class="grid">
+                                <div class="col-12">
+                                    <p:outputLabel for="@next">#{msg["issue.title"]}</p:outputLabel>
+                                    <p:inputText class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.title}"/>     
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-12">
+                                    <p:outputLabel for="@next">#{msg["issue.issueDescription"]}</p:outputLabel>
+                                    <p:inputTextarea class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.description}"></p:inputTextarea>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.priority"]}</p:outputLabel>
+                                    <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true" value="#{issueCreateBean.issueCreateDTO.issueDetailDTO.priority}">
+                                        <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                        <f:selectItems value="#{issueCreateBean.priority}"/>
+                                    </p:selectOneMenu>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next" value="To Be Completed By"/>
+                                    <p:datePicker class="flex my-2" inputStyleClass="w-full" id="time" showTime="true" mindate="#{issueCreateBean.minDateTime}" pattern="dd/MM/yyyy" value="#{issueCreateBean.issueCreateDTO.issueDetailDTO.endDate}"/>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-12">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.comments"]}</p:outputLabel>
+                                    <p:inputTextarea class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.issueDetailDTO.comment}"></p:inputTextarea>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+
+                        <p:outputPanel id="tagOutputPanel">
+                            <h4 class="issue-firstHeader">#{msg["issue.issueTags"]}</h4>
+                            <div class="grid">
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.TagTitle"]}</p:outputLabel>
+                                    <p:selectOneMenu id="tagTitle" class="w-full my-2" value="#{newTagDisplayBean.tagTitle}" editable="true" alwaysDisplayLabel="true">
+                                        <p:ajax listener="#{newTagDisplayBean.handleChange}" update="tagColor"/>
+                                        <f:selectItem itemLabel="#{null}" noSelectionOption="true"/>
+                                        <f:selectItems value="#{newTagDisplayBean.tagTitleList}"/>
+                                    </p:selectOneMenu>
+                                    <p:message class="messages" for="tagTitle"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.TagColor"]}</p:outputLabel>
+                                    <div class="flex flex-row">
+                                        <p:selectOneMenu id="tagColor" class="flex w-full inputfield my-2" value="#{newTagDisplayBean.tagColor}" alwaysDisplayLabel="true">
+                                            <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                            <f:selectItems value="#{newTagDisplayBean.tagColorList}"/>
+                                        </p:selectOneMenu>
+                                        <p:commandButton class="ml-2 mt-2 h-full" process="tagOutputPanel" update="tagOutputPanel" action="#{newTagDisplayBean.updateTag}" icon="pi pi-plus"></p:commandButton>
+                                    </div>
+                                    <p:message class="messages" for="tagColor"/>
+                                </div>
+                                <div class="col-12">
+                                    <div class="card h-7rem">
+                                        <h:panelGroup id="display" class="flex flex-wrap">
+                                            <p:repeat id="displayRepeat" value="#{newTagDisplayBean.tagList}" var="tag">
+                                                <div class="issue-tag mr-2 text-white font-bold #{tag.hexColor}">
+                                                    <span>#{tag.title}</span>
+                                                    <p:commandButton styleClass="tag-btn text-white rounded-button ui-button-flat ui-button-plain" icon="pi pi-times" process="@this" action="#{newTagDisplayBean.removeTag}">
+                                                        <f:setPropertyActionListener target="#{newTagDisplayBean.tag}" value="#{tag}"/>
+                                                    </p:commandButton>
+                                                </div>
+                                            </p:repeat>
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+
+                        <p:outputPanel id="deviceInformation">
+                            <h4>#{msg["issue.deviceInformation"]}</h4>
+                            <div class="grid">
+                                <div class="col-6">
+                                    <p:outputLabel for="@next">#{msg["issue.hostName"]}</p:outputLabel>
+                                    <p:inputText class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.hostName}"/>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next">#{msg["issue.chargerSerialNumber"]}</p:outputLabel>
+                                    <p:inputText class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.chargerSerialNumber}"/>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next">#{msg["issue.deviceModel"]}</p:outputLabel>
+                                    <p:inputText class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.deviceModel}"/>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel for="@next">#{msg["issue.deviceSerialNumber"]}</p:outputLabel>
+                                    <p:inputText class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.deviceSerialNumber}"/>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.operatingSystem"]}</p:outputLabel>
+                                    <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.operatingSystem}">
+                                        <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                        <f:selectItems value="#{issueCreateBean.operatingSystem}"/>
+                                    </p:selectOneMenu>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.antivirus"]}</p:outputLabel>
+                                    <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.antivirus}">
+                                        <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                        <f:selectItems value="#{issueCreateBean.antivirus}"/>
+                                    </p:selectOneMenu>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+
+                        <p:outputPanel id="others">
+                            <h4>#{msg["issue.customerDetails"]}</h4>
+                            <div class="grid">
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.customerName"]}</p:outputLabel>
+                                    <p:inputText class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.name}"/>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.customerEmail"]}</p:outputLabel>
+                                    <p:inputText class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.email}"/> 
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.customerContactNumber"]}</p:outputLabel>
+                                    <p:inputText class="w-full my-2" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.contactNumber}"/>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.customerDevicePassword"]}</p:outputLabel>
+                                    <p:password class="my-2" toggleMask="true" redisplay="true" size="45" value="#{issueCreateBean.issueCreateDTO.issueCustomerDetailDTO.devicePassword}"/>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                            </div>
+
+                            <h4>#{msg["issue.teamOperatingOnThisIssue"]}</h4>
+                            <div class="grid">
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.teamLeader"]}</p:outputLabel>
+                                    <p:selectOneMenu class="flex inputfield my-2" alwaysDisplayLabel="true">
+                                        <f:selectItem itemLabel="#{null}" itemDisabled="true"/>
+                                        <f:selectItems value="#{issueCreateBean.team}"/>
+                                    </p:selectOneMenu>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                                <div class="col-6">
+                                    <p:outputLabel class="flex" for="@next">#{msg["issue.assistants"]}</p:outputLabel>
+                                    <p:selectCheckboxMenu class="flex my-2" filterMatchMode="startsWith" filter="true" label="#{null}" multiple="true">
+                                        <f:selectItems value="#{issueCreateBean.team}"/>
+                                    </p:selectCheckboxMenu>
+                                    <p:message class="messages" for="@previous"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                        
+                        <p:commandButton class="w-full mt-4" value="Submit" update="generalInformation deviceInformation others @this" action="#{issueCreateBean.createIssue}"/>
+                        <p:growl showDetail="true" globalOnly="true"/>
+                    </h:form>
+                </div>
+            </h:body>
+        </ui:define>
+    </ui:composition>
+
+</html>
