@@ -1,0 +1,31 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: Default
+
+steps:
+- script: |
+    curl -u $(username):$(password) http://localhost:8080/job/issue-tracker-pipeline/build?token=issuetrackertoken 
+  displayName: 'Connect to Jenkins'
+- checkout: self
+  persistCredentials: true  
+  clean: true
+- task: JenkinsDownloadArtifacts@1
+  inputs:
+    jenkinsServerConnection: 'Jenkins Service Connection'
+    jobName: 'issue-tracker-pipeline'
+    saveTo: 'jenkinsArtifacts'
+    jenkinsBuild: 'LastSuccessfulBuild'
+- task: CmdLine@2
+  inputs:
+    script: |
+      git checkout main
+      git add .
+      git commit -m message
+      git push

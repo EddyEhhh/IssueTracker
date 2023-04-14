@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss, Home of Professional Open Source
+    Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. See the copyright.txt in the
+    distribution for a full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <name>issue-tracker project</name>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>edu.mac.issuetracker</groupId>
+    <artifactId>issue-tracker</artifactId>
+    <version>0.1</version>
+    <packaging>pom</packaging>
+
+   
+    <modules>
+        <module>issue-tracker-ear</module>
+        <module>issue-tracker-web</module>
+        <module>issue-tracker-issue-ejb</module>
+        <module>IssueExtendedAssignment</module>
+        <module>mavenproject1</module>
+    </modules>
+
+    <properties>
+        <!-- Explicitly declaring the source encoding eliminates the following 
+            message: -->
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered 
+            resources, i.e. build is platform dependent! -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+
+
+        <!-- other plugin versions -->
+        <version.jakartaee>9.1.0</version.jakartaee>
+        <version.compiler.plugin>3.8.1</version.compiler.plugin>
+        <version.ear.plugin>3.2.0</version.ear.plugin>
+        <version.ejb.plugin>3.1.0</version.ejb.plugin>
+        <version.jpa>3.0.0</version.jpa>
+        <version.eclipsejpa>3.0.2</version.eclipsejpa>
+        <version.war.plugin>3.3.1</version.war.plugin>
+        <version.resource.plugin>3.2.0</version.resource.plugin>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <version.hsqldb>2.6.0</version.hsqldb>
+        <version.mysqljconnector>8.0.26</version.mysqljconnector>
+        <version.commons-lang3>3.12.0</version.commons-lang3>
+        <rootdir>${basedir}/resources</rootdir>
+        <!-- maven-compiler-plugin -->
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Define the version of the EJB jar so that we don't need 
+                to repeat ourselves in every module -->
+            <dependency>
+                <groupId>edu.mac.issuetracker.staff</groupId>
+                <artifactId>issue-tracker-staff-ejb</artifactId>
+                <version>${project.version}</version>
+                <type>jar</type>
+            </dependency>
+            
+            <!-- Define the version of the WAR so that we don't need to repeat 
+                ourselves in every module -->
+            <dependency>
+                <groupId>edu.mac.issuetracker</groupId>
+                <artifactId>issue-tracker-web</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+                <scope>compile</scope>
+            </dependency>
+
+        </dependencies>
+        
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.compiler.plugin}</version>
+                    <configuration>
+                        <source>11</source>
+                        <target>11</target>
+                        <compilerArguments>
+                            <endorseddirs>${endorsed.dir}</endorseddirs>
+                        </compilerArguments>
+                    </configuration>
+                </plugin>
+            </plugins>
+            
+        </pluginManagement>
+    </build>
+
+</project>
